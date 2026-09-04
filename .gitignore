@@ -57,3 +57,6 @@ Thumbs.db
 
 # Docker local overrides
 docker-compose.override.yml
+
+# Media
+docs/media/*.mp4
