@@ -1,0 +1,27 @@
+# Virtual environments and Python cache
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Private environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Local SQLite databases and runtime data
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# Git, editor, logs and temporary files
+.git/
+.gitignore
+.vscode/
+.idea/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

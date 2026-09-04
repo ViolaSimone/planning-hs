@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: planning-hs-backend
+    volumes:
+      - ./backend:/app
+      - planning_hs_data:/app/data
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:///./data/planning_hs.db
+      DEBUG: "true"
+      APP_NAME: Planning H&S
+      HOST: 0.0.0.0
+      PORT: "8000"
+    command: python start_backend.py
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: dev
+    container_name: planning-hs-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    command: npm run dev
+
+volumes:
+  planning_hs_data:

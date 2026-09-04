@@ -1,0 +1,59 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments and local Python artifacts
+venv/
+env/
+.venv/
+backend/venv/
+backend/env/
+*.egg-info/
+dist/
+build/
+
+# Local databases and backups
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+*.sqlite-shm
+*.sqlite-wal
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Node.js and Next.js
+node_modules/
+.next/
+out/
+coverage/
+
+# Alembic local/cache artifacts
+backend/alembic/__pycache__/
+backend/alembic/versions/__pycache__/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Docker local overrides
+docker-compose.override.yml
