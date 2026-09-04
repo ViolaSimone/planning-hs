@@ -2,8 +2,7 @@
 
 Gestione della formazione sicurezza aziendale e della sorveglianza sanitaria: un'unica dashboard per sapere, in ogni momento, chi ha i corsi in regola, chi sta per scadere e chi è già fuori norma.
 
-<video src="https://github.com/ViolaSimone/planning-hs/releases/download/v1.0.0-demo/demo.mp4" controls muted playsinline width="100%"></video>
-
+<video src="https://github.com/user-attachments/assets/dccd54c6-87e9-44f0-8b86-331f6cee3e57" controls muted playsinline width="100%"> </video>
 
 
 ## Il problema che risolve
