@@ -1,8 +1,8 @@
 # Planning H&S
 
-Gestione della formazione sulla sicurezza aziendale e della sorveglianza sanitaria: un'unica dashboard per sapere, in ogni momento, chi ha i corsi in regola, chi sta per scadere e chi è già fuori norma.
-
 [English version](README.md)
+
+Gestione della formazione sulla sicurezza aziendale e della sorveglianza sanitaria: un'unica dashboard per sapere, in ogni momento, chi ha i corsi in regola, chi sta per scadere e chi è già fuori norma.
 
 <video src="https://github.com/user-attachments/assets/dccd54c6-87e9-44f0-8b86-331f6cee3e57" controls muted playsinline width="100%"></video>
 
