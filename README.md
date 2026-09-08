@@ -1,134 +1,128 @@
 # Planning H&S
 
-Gestione della formazione sicurezza aziendale e della sorveglianza sanitaria: un'unica dashboard per sapere, in ogni momento, chi ha i corsi in regola, chi sta per scadere e chi è già fuori norma.
+A dashboard for managing workplace safety training and occupational health surveillance, showing which employees are compliant, approaching expiry, overdue, or missing mandatory requirements.
 
-<video src="https://github.com/user-attachments/assets/dccd54c6-87e9-44f0-8b86-331f6cee3e57" controls muted playsinline width="100%"> </video>
+[Versione italiana](README.IT.md)
 
+<video src="https://github.com/user-attachments/assets/dccd54c6-87e9-44f0-8b86-331f6cee3e57" controls muted playsinline width="100%"></video>
 
-## Il problema che risolve
+## The problem it solves
 
-Nelle aziende soggette al D.Lgs. 81/2008, ogni dipendente deve avere corsi di sicurezza validi (Sicurezza Generale, Antincendio, Primo Soccorso, RLS, formazioni specifiche per ruolo) e, se previsto dal suo inquadramento, una sorveglianza sanitaria periodica in corso di validità.
+Companies must keep safety training and, where applicable, occupational health surveillance up to date for their employees. Managing this information across spreadsheets becomes difficult as the number of employees, roles, courses, locations, and expiry dates grows.
 
-Tenere traccia di tutto questo con un foglio Excel diventa rapidamente insostenibile quando cresce il numero di dipendenti, di ruoli e di corsi: le scadenze si perdono, gli aggiornamenti vengono fatti a mano su più copie del file, non c'è uno storico affidabile e non c'è nessun avviso automatico quando una scadenza si avvicina.
+Planning H&S centralizes these records, calculates renewal dates from the configured course or health plan rules, highlights each status visually, and can send an aggregated email when a relevant status changes.
 
-Planning H&S centralizza questi dati in un unico posto, calcola automaticamente le scadenze in base al corso, al ruolo e all'inquadramento del dipendente, segnala visivamente lo stato con colori e può inviare un'email di riepilogo quando qualcosa cambia, senza bisogno di controllare la dashboard ogni giorno.
+## How it works
 
-## Come funziona
+The application connects several concepts:
 
-Il cuore del sistema è la relazione tra alcuni concetti collegati tra loro:
+- **Safety roles** such as RSPP, RLS, Supervisor, Fire Safety Officer, First Aid Officer, or Food Operator. Each role can require one or more mandatory courses.
+- **Job classifications** such as Office Employee or Production Worker. A classification can determine whether an occupational health plan applies.
+- **Courses and health surveillance plans**, each with a configurable renewal period in years or months. Courses with a renewal value of `0` do not expire.
 
-- **Ruoli di sicurezza** (es. RSPP, RLS, Preposto, Addetto Antincendio): ogni ruolo richiede uno o più corsi obbligatori.
-- **Inquadramento** del dipendente (es. Operaio, Impiegato): determina se e quale piano di sorveglianza sanitaria si applica.
-- **Corsi** e **piani di sorveglianza sanitaria**: hanno una periodicità di rinnovo (in anni o mesi); alcuni, come Sicurezza Generale, non scadono mai.
+When roles and classification are assigned to an employee, the application calculates the required training and evaluates the current medical surveillance requirement. Course expiry dates are calculated from the completion date and the configured renewal period.
 
-Quando assegni ruoli e inquadramento a un dipendente, l'app calcola da sola quali corsi gli servono e quando scadranno, in base alla data di completamento inserita. Lo stesso vale per l'idoneità medica, calcolata dal piano di sorveglianza collegato al suo inquadramento.
+Each requirement can have one of the following statuses:
 
-Ogni corso o visita medica viene classificato in una di queste categorie, in base ai giorni rimanenti prima della scadenza:
-
-| Categoria | Significato |
+| Status | Meaning |
 |---|---|
-| In regola | Nessuna scadenza imminente |
-| In scadenza | Sotto la soglia configurata (default 70 giorni) |
-| Critico / Scaduto | Scadenza già passata |
-| Mancante | Corso o visita obbligatoria mai registrata |
+| Compliant | No expiry is currently close |
+| Expiring soon | The expiry date is within the configured threshold (70 days by default) |
+| Critical / Expired | The expiry date has been reached or passed |
+| Missing | A mandatory course or medical record has not been registered |
 
-### Alert e notifiche automatizzate
+### Automated alerts and notifications
 
-Una volta al giorno, a un orario configurabile, l'app esegue un controllo automatico che confronta lo stato attuale di ogni dipendente/corso con quello rilevato nel controllo precedente. Se una combinazione dipendente-corso è passata da "In regola" a "In scadenza", oppure da "In scadenza" a "Critico", oppure un corso obbligatorio è diventato "Mancante", questo viene registrato come cambiamento.
+Once a day, at a configurable time, the application compares the current status of each employee requirement with the previous check. It detects changes such as a course becoming expiring soon, critical, expired, or missing.
 
-Se ci sono cambiamenti, viene inviata **una sola** email di riepilogo al destinatario configurato, con l'elenco di tutte le variazioni raggruppate per categoria. Se dal giorno precedente non cambia nulla, non arriva nessuna email: questo evita sia il rumore di notifiche ripetute sia il rischio di dimenticare una scadenza perché sepolta in troppi avvisi.
+When changes are found, the application sends **one aggregated email** to the configured recipient, grouping the changes by category. If nothing changed since the previous check, no email is sent. This avoids duplicate daily notifications.
 
-Dalla pagina Impostazioni è sempre possibile forzare un controllo immediato con "Verifica cambiamenti ora", utile per testare la configurazione email senza aspettare l'orario programmato. Se l'invio non riesce (SMTP non configurato, credenziali errate, destinatario mancante), la pagina mostra il motivo in modo esplicito, senza mai rivelare la password.
+The Settings page also provides a “Check changes now” action to test the process immediately. If SMTP is incomplete or delivery fails, the interface reports a safe diagnostic message without exposing the password.
 
-## Funzionalità principali
+## Main features
 
 ### Dashboard
 
-Vista d'insieme di tutti i dipendenti, con stato colorato per ogni corso obbligatorio e per l'idoneità medica. Filtri per sede, reparto, ruolo e inquadramento. Export in Excel o CSV delle colonne selezionate.
+Overview of employees and the status of mandatory courses and medical fitness. Includes filters by location, department, role, and classification, plus Excel and CSV export for selected columns.
 
-### Anagrafica dipendenti
+### Employee registry
 
-Dati personali, ruoli di sicurezza multipli, inquadramento singolo, storico degli inquadramenti nel tempo.
+Employee contact and personal data, multiple safety roles, one active job classification, and backend history of classification changes.
 
-### Corsi
+### Courses
 
-Catalogo dei corsi con periodicità di rinnovo personalizzabile (in anni), corsi che non scadono mai (es. Sicurezza Generale), e collegamento tra corso e ruoli che lo richiedono come obbligatorio.
+Configurable course catalogue with renewal periods, non-expiring courses, active/inactive status, and mandatory-course links for safety roles.
 
-### Sorveglianza sanitaria
+### Occupational health surveillance
 
-Piani sanitari configurabili (es. "Videoterminalisti", "Movimentazione carichi"), con periodicità in anni o mesi, associati a uno o più inquadramenti. Ogni dipendente ha una sola idoneità medica corrente, con storico completo delle visite passate conservato lato backend.
+Configurable medical plans with renewal periods in years or months, linked to one or more job classifications. Each employee has one current medical record and a backend history of previous visits.
 
-### Pianifica
+### Planning
 
-Questa sezione non serve solo a vedere chi sta per scadere: è pensata per raccogliere rapidamente i dati necessari a organizzare un'aula di formazione o a preparare gli attestati di partecipazione. Selezioni un corso o un piano sanitario, l'app ti mostra automaticamente tutti i dipendenti candidati (mancanti, scaduti, critici o in scadenza), ordinati per urgenza.
+Planning is designed to turn expiry data into concrete actions. Select a course or health plan and the application automatically lists employees who are missing, expired, critical, or approaching expiry, ordered by priority.
 
-Da qui puoi scegliere quali campi rendere visibili nell'export, ad esempio Nome, Cognome, Codice Fiscale, Data di nascita, Luogo di nascita, Reparto e Ruoli: esattamente i dati richiesti per compilare un registro d'aula o generare gli attestati di un corso, senza dover ricopiare i dati a mano da un'altra sezione dell'app. L'export filtrato può essere scaricato in Excel o CSV, già pronto per essere usato come base per la modulistica del corso.
+The visible columns can be selected before exporting. For a classroom register or certificate preparation, you may select name, surname, tax code, date and place of birth, email, phone, department, location, job position, roles, and the selected course or health plan. The filtered Excel or CSV file is ready to support invitations, attendance records, or certificate templates without manually copying data from another section.
 
-### Report
+### Reports
 
-I report per corso e per piano sanitario non si limitano a mostrare la situazione attuale: permettono di impostare una soglia di giorni a piacere (es. 90, 180, 365 giorni) per capire quante persone avranno bisogno di un rinnovo in un dato periodo futuro. Questo rende la sezione Report uno strumento utile per il calcolo del fabbisogno formativo e per pianificare in anticipo il budget o le sessioni d'aula dei prossimi mesi.
+Course and medical-plan reports aggregate missing, expiring, and expired requirements and calculate compliance percentages. The reporting threshold can be changed to estimate future training and medical-surveillance demand, for example over 90, 180, or 365 days. This supports session planning, budget estimates, and future training capacity decisions.
 
-### Configurabilità e adattabilità
+### Configuration and adaptability
 
-Il progetto non è legato a un settore specifico. Oltre ai corsi e ai ruoli precaricati all'avvio (pensati come punto di partenza generico), è possibile creare liberamente:
+The application is not tied to one industry. In addition to the initial sample data, users can create courses, safety roles, job classifications, medical plans, and new relationships between them.
 
-- nuovi corsi, con propria periodicità di rinnovo;
-- nuovi ruoli di sicurezza;
-- nuovi inquadramenti aziendali;
-- nuovi piani di sorveglianza sanitaria;
-- nuovi collegamenti tra ruoli e corsi obbligatori, e tra inquadramenti e piani sanitari.
+Examples include:
 
-Questo rende l'app adattabile a tipologie di azienda molto diverse tra loro. Ad esempio:
+- **Manufacturing company**: production workers, forklift operators, supervisors, equipment-specific courses, and a manual-handling medical plan.
+- **Office or professional studio**: office employees, display-screen workers, RLS, and a dedicated health-surveillance plan.
+- **Food company**: food operators with mandatory HACCP training in addition to general safety training.
 
-- **Azienda manifatturiera**: ruoli come Operaio, Addetto Muletto, Preposto di reparto; corsi specifici per macchine e attrezzature; piano sanitario per movimentazione manuale dei carichi.
-- **Studio professionale o ufficio**: ruoli come Impiegato, Videoterminalista.
-- **Azienda alimentare**: ruolo Operatore Alimentare con corso HACCP obbligatorio.
+The expiry and alert engine remains the same; only the configuration changes.
 
-In tutti i casi, la logica di calcolo delle scadenze e degli alert resta identica: cambia solo la configurazione, non il codice.
+## Credential security
 
-## Sicurezza delle credenziali
+SMTP host, port, username, sender, sender name, and report recipient are stored in the application database and remain available after a backend restart, so automated alerts can continue to work.
 
-Le impostazioni SMTP (host, porta, username, mittente, destinatario del report) sono salvate nel database dell'app e restano disponibili dopo un riavvio del backend, in modo che gli alert automatici continuino a funzionare senza dover reinserire la configurazione ogni volta.
+The SMTP password is encrypted before being stored in the database and is never returned by the API. The password field remains empty in the interface even when a password is configured; the UI shows only the configuration status.
 
-La password SMTP è trattata diversamente: viene **cifrata** prima di essere salvata nel database e non viene mai restituita da nessuna chiamata API, nemmeno dopo il salvataggio. Il campo password nella pagina Impostazioni parte sempre vuoto: se una password è già configurata, la pagina lo segnala esplicitamente, senza mostrarla.
+The encryption key, `SETTINGS_ENCRYPTION_KEY`, is kept only in the private `backend/.env` file or in production environment variables. It must never be committed to GitHub.
 
-Per poter cifrare e decifrare questa password, l'app usa una chiave dedicata, `SETTINGS_ENCRYPTION_KEY`, che vive solo in `backend/.env` (mai nel database, mai su GitHub). Alla prima installazione, genera questa chiave una sola volta, con il virtual environment del backend attivo:
+Generate one during the first setup with the backend virtual environment active:
 
 ```bash
 cd backend
 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 ```
 
-Copia il valore restituito in `backend/.env`:
+Then add it to `backend/.env`:
 
 ```env
-SETTINGS_ENCRYPTION_KEY=<valore-generato>
+SETTINGS_ENCRYPTION_KEY=<generated-value>
 ```
 
-Se questa chiave non viene impostata, l'app funziona comunque normalmente: semplicemente, qualsiasi password SMTP salvata dalla pagina Impostazioni non verrà conservata in modo permanente e andrà persa al riavvio del backend. Gli altri campi (host, username, mittente, soglie) vengono invece sempre salvati, chiave o non chiave.
+If the key is not configured, the application still runs, but an SMTP password entered through the UI will not survive a backend restart. Other non-sensitive settings are still saved.
 
-## Stack tecnologico
+## Technology stack
 
-| Livello | Tecnologia |
+| Layer | Technology |
 |---|---|
-| Frontend | Next.js 16.3.3 (App Router), React, TypeScript, Tailwind CSS |
-| Backend | FastAPI (Python), SQLAlchemy 2.0 (async), Alembic, APScheduler |
-| Database | SQLite in locale, PostgreSQL in cloud |
-| Notifiche | FastAPI-Mail (SMTP), password cifrata con `cryptography` |
+| Frontend | Next.js 16.3.3 (App Router), React 19, TypeScript, Tailwind CSS |
+| Backend | FastAPI, async SQLAlchemy 2.0, Alembic, APScheduler |
+| Database | SQLite locally, PostgreSQL in cloud deployments |
+| Notifications | FastAPI-Mail (SMTP), password encrypted with `cryptography` |
 
-## Avvio rapido
+## Quick start
 
-### Con Docker (consigliato)
+### With Docker (recommended)
 
 ```bash
-git clone <url-del-repository>
+git clone <repository-url>
 cd planning-hs
-
 cp backend/.env.example backend/.env
 docker compose up --build
 ```
 
-Su Windows PowerShell, usa:
+On Windows PowerShell:
 
 ```powershell
 Copy-Item backend\.env.example backend\.env
@@ -136,37 +130,35 @@ docker compose up --build
 ```
 
 - Frontend: [http://localhost:3000](http://localhost:3000)
-- Backend / documentazione API: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Backend/API docs: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-La configurazione Docker predefinita avvia l'ambiente di sviluppo, con hot reload del frontend. Per la guida Docker completa, il reset dei dati, la modalità production-style e il troubleshooting, vedi [`docs/DOCKER.md`](docs/DOCKER.md).
+For detailed Docker instructions, reset procedures, production-style testing, and troubleshooting, see [`docs/DOCKER.md`](docs/DOCKER.md).
 
-### Senza Docker
+### Without Docker
 
 #### Backend
 
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate      # Windows: venv\Scripts\activate
-
+source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
-
 cp .env.example .env
 alembic upgrade head
 python start_backend.py
 ```
 
-Su Windows PowerShell, l'attivazione dell'ambiente virtuale e la copia del file sono:
+On Windows PowerShell:
 
 ```powershell
 .\venv\Scripts\Activate.ps1
 Copy-Item .env.example .env
 ```
 
-#### Frontend: sviluppo quotidiano
+#### Frontend development
 
-In un secondo terminale:
+In a second terminal:
 
 ```bash
 cd frontend
@@ -174,11 +166,9 @@ npm install
 npm run dev
 ```
 
-Questo avvia Next.js in modalità sviluppo, con hot reload: è il comando da usare mentre modifichi il codice.
+#### Local production-style frontend test
 
-#### Frontend: test della build production
-
-Il progetto usa `output: "standalone"` in Next.js. Per verificare localmente la build di produzione, in un secondo terminale esegui:
+The project uses `output: "standalone"`. To test the production build locally:
 
 ```bash
 cd frontend
@@ -186,84 +176,59 @@ npm run build
 npm run start
 ```
 
-`npm run build` genera l'output standalone e copia automaticamente gli asset statici necessari; `npm run start` avvia il server standalone generato in `.next/standalone/server.js`. Questa modalità non offre hot reload ed è pensata per un test locale simile alla produzione.
+`npm run build` generates the standalone output and prepares the static assets; `npm run start` launches `.next/standalone/server.js`. This mode does not provide hot reload.
 
-Backend su `http://localhost:8000`, frontend su `http://localhost:3000`. Devono essere entrambi attivi: il frontend da solo si limita a chiamare le API del backend, che gestisce database, calcolo scadenze, alert ed export.
+The backend and frontend must both be running. Requirements: Python 3.11 or 3.12, Node.js 18+, and npm.
 
-**Requisiti:** Python 3.11 o 3.12 (raccomandato), Node.js 18+ e npm.
+> Whenever a model changes, create and apply an Alembic migration: `alembic revision --autogenerate -m "description"`, then `alembic upgrade head`.
 
-> Ogni volta che aggiungi o modifichi un modello in `backend/models.py`, genera una nuova migrazione con `alembic revision --autogenerate -m "descrizione"` e applicala con `alembic upgrade head`. Lo schema del database è gestito da Alembic, non da una creazione automatica delle tabelle all'avvio.
+## Configuration
 
+Copy `backend/.env.example` to `backend/.env`. The real `.env` file must never be committed. SMTP settings, alert thresholds, and the scheduler time can also be changed from the Settings page.
 
-## Configurazione
+## Data persistence
 
-Tutta la configurazione parte da `backend/.env.example`. Copialo in `backend/.env` e personalizza solo la tua copia locale: quel file non deve mai essere pubblicato su GitHub.
-
-Le impostazioni SMTP, le soglie di alert e l'orario del controllo automatico possono anche essere modificate a runtime dalla pagina **Impostazioni** dell'app, senza toccare il file `.env`.
-
-## Dati e persistenza
-
-Il database (SQLite in locale, PostgreSQL in cloud) conserva dipendenti, corsi, storico e configurazione dell'app tra un riavvio e l'altro. Per azzerare completamente i dati di test prima di una demo o di una pubblicazione:
+The database stores employees, courses, history, and application settings across restarts. To reset Docker test data:
 
 ```bash
 docker compose down -v --remove-orphans
 ```
 
-oppure, in locale, elimina il file `planning_hs.db` e rilancia `alembic upgrade head`.
+For local development, remove `planning_hs.db` and run `alembic upgrade head` again.
 
-## Verifica manuale
+## Manual verification
 
-Prima di distribuire una nuova versione, esegui una verifica manuale essenziale in ambiente locale o Docker.
+Before a new version, verify startup, migrations, employee management, courses, medical records, dashboard, Planning, reports, SMTP settings, alerts, Excel/CSV exports, the standalone build, and both Docker development and production-style modes.
 
-| Area | Verifica |
-|---|---|
-| Avvio | Backend, frontend e documentazione API sono raggiungibili senza errori |
-| Database | Le migrazioni Alembic vengono applicate e l'app parte con un database vuoto |
-| Dipendenti | Creazione, modifica e cancellazione di un dipendente |
-| Formazione | Inserimento, modifica e rimozione di una data corso; calcolo corretto della scadenza |
-| Sorveglianza | Inserimento e aggiornamento dell'idoneità medica; calcolo della scadenza dal piano associato |
-| Dashboard | Filtri, stati colorati e dati coerenti con ruoli e inquadramenti assegnati |
-| Pianifica | Selezione corso/piano, filtri, scelta campi visibili ed export Excel/CSV |
-| Report | Filtri temporali, calcolo delle situazioni mancanti/in scadenza/scadute ed export |
-| Impostazioni | Salvataggio di soglie, orario e dati SMTP non sensibili dopo refresh e riavvio backend |
-| Password SMTP | La password non viene restituita dall'API; lo stato `smtp_password_configured` viene aggiornato correttamente |
-| Notifiche | Il controllo immediato rileva cambiamenti e segnala chiaramente invio riuscito o errore SMTP |
-| Export Excel | Le colonne sono adattate al contenuto e risultano leggibili senza ridimensionamento manuale |
-| Build frontend | `npm run build` e `npm run start` funzionano senza errori 404 per asset JS o CSS |
-| Docker | Test riuscito sia con `docker compose up --build` sia con `docker compose -f docker-compose.prod.yml up --build` |
-
-Per una verifica ripetibile prima del push, usa un database e credenziali SMTP di test. Non inserire dati personali reali, password reali o chiavi private nel repository.
+## Project structure
 
 
-## Struttura del progetto
-
-```text
 planning-hs/
 ├── README.md
-├── LICENSE                         # MIT License
-├── docker-compose.yml              # Ambiente Docker di sviluppo
-├── docker-compose.prod.yml         # Test Docker production-style
-├── .dockerignore                   # Opzionale: utile solo con build context root
+├── README.IT.md
+├── LICENSE
+├── docker-compose.yml
+├── docker-compose.prod.yml
+├── .dockerignore
 ├── docs/
 │   ├── DOCKER.md
-│   └── GUIDA_UTENTE.md
-│   └── media/
+│   ├── GUIDA_UTENTE.md
+│   └── USER_GUIDE.md
 │
 ├── backend/
 │   ├── .dockerignore
-│   ├── .env.example                   # Template pubblico della configurazione
+│   ├── .env.example
 │   ├── requirements.txt
 │   ├── Dockerfile
 │   ├── alembic.ini
-│   ├── alembic/
-│   │   └── versions/
+│   ├── alembic/versions/
 │   ├── config.py
 │   ├── database.py
 │   ├── models.py
 │   ├── repositories.py
 │   ├── services.py
-│   ├── settings_service.py            # Impostazioni persistenti e cifratura SMTP
-│   ├── excel_utils.py                 # Adattamento colonne degli export Excel
+│   ├── settings_service.py
+│   ├── excel_utils.py
 │   ├── alert_engine.py
 │   ├── notifications.py
 │   ├── scheduler.py
@@ -276,43 +241,35 @@ planning-hs/
 │
 └── frontend/
     ├── .dockerignore
-    ├── Dockerfile                     # Stage dev, builder e runner
+    ├── Dockerfile
     ├── package.json
     ├── package-lock.json
     ├── next.config.js
     ├── scripts/
-    │   └── copy-standalone-assets.js  # Prepara gli asset per npm run start
+    │   └── copy-standalone-assets.js
     ├── lib/
     ├── components/
     └── app/
         ├── layout.tsx
-        ├── page.tsx                   # Dashboard
+        ├── page.tsx
         ├── employees/
         ├── courses/
         ├── surveillance/
         ├── planning/
         ├── reports/
         └── settings/
-```
 
-## Guida utente
 
-Una guida operativa pensata per chi usa l'app quotidianamente (HR, RSPP, responsabili formazione), separata dalla documentazione tecnica, sarà disponibile in `docs/GUIDA_UTENTE.md`.
+## User guide
 
-## Privacy e roadmap
+The operational guide for HR, safety managers, and training coordinators is available in [`docs/USER_GUIDE.md`](docs/GUIDA_UTENTE.md). An English translation can be added as `docs/USER_GUIDE.en.md` when needed.
 
- Non deve essere considerato automaticamente idoneo all'uso in produzione con dati personali reali o conforme al GDPR senza una valutazione specifica del contesto, dell'infrastruttura e delle procedure organizzative adottate.
+## Privacy and roadmap
 
-Prima di un utilizzo produttivo, le principali evoluzioni previste sono:
+Planning H&S is currently intended for development, demos, and technical evaluation. Before production use with real personal data, further measures will be required, including separate user authentication, role-based authorization, audit logging, database and backup encryption, HTTPS, and security procedures.
 
-- autenticazione con utenti distinti e password gestite in modo sicuro;
-- ruoli e autorizzazioni per limitare l'accesso ai soli dati necessari;
-- registro di audit delle operazioni rilevanti, incluse modifiche, esportazioni e attività amministrative;
-- cifratura del database e dei backup, con gestione sicura delle chiavi;
-- protezione del traffico tramite HTTPS e procedure di backup, ripristino e aggiornamento della sicurezza.
+GDPR compliance also depends on the deployment context, infrastructure, and organizational procedures.
 
-La conformità al GDPR non dipende soltanto dall'applicazione: richiede anche configurazione sicura, procedure aziendali, formazione degli utenti e valutazione del rischio nel caso concreto.
+## License
 
-## Licenza
-
-MIT
+Distributed under the [MIT License](LICENSE).
