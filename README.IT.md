@@ -200,6 +200,7 @@ Prima di una nuova versione, verifica avvio, migrazioni, creazione/modifica dipe
 
 ## Struttura del progetto
 
+```text
 planning-hs/
 ├── README.md
 ├── README.IT.md
@@ -255,6 +256,7 @@ planning-hs/
         ├── planning/
         ├── reports/
         └── settings/
+```
 
 ## Guida utente
 

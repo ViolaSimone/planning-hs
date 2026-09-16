@@ -204,7 +204,7 @@ Before a new version, verify startup, migrations, employee management, courses, 
 
 ## Project structure
 
-
+```text
 planning-hs/
 ├── README.md
 ├── README.IT.md
@@ -260,6 +260,7 @@ planning-hs/
         ├── planning/
         ├── reports/
         └── settings/
+```
 
 
 ## User guide
